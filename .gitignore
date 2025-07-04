@@ -1,0 +1,31 @@
+venv/
+.env
+__pycache__/
+
+# Entorno virtual
+venv/
+.env
+
+# Archivos Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configuración del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos de bases de datos locales o temporales
+*.sqlite3
+
+# Archivos de caché o IDEs
+.idea/
+.vscode/
+*.swp
+
+# Archivos de imágenes subidas o generadas (si no quieres subirlas al repo)
+images/
+static/images/
