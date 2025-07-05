@@ -3,6 +3,7 @@ from datetime import date
 from typing import Optional, List
 from app.models.models import Legend, Category, Province, Canton, District
 from app.schemas.schemas import LegendCreate, LegendUpdate
+from sqlalchemy.orm import selectinload
 
 
 
@@ -46,7 +47,12 @@ def get_legends(
     limit: int = 100,
     filters: dict = {}
 ) -> List[Legend]:
-    query = select(Legend)
+    query = select(Legend).options(
+        selectinload(Legend.category),
+        selectinload(Legend.province),
+        selectinload(Legend.canton),
+        selectinload(Legend.district),
+    )
 
     if "title" in filters:
         query = query.where(Legend.title.contains(filters["title"]))

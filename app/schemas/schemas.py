@@ -2,9 +2,7 @@ from pydantic import BaseModel, EmailStr
 from datetime import date
 from typing import Optional
 
-# ---------------------------
-# AUTENTICACIÓN
-# ---------------------------
+
 
 class Token(BaseModel):
     access_token: str
@@ -22,9 +20,7 @@ class UserCreate(BaseModel):
     password: str
 
 
-# ---------------------------
-# LEYENDAS
-# ---------------------------
+
 
 class LegendBase(BaseModel):
     title: str
@@ -46,7 +42,7 @@ class Legend(LegendBase):
     image_url: str
     created_at: date
     owner_id: int
-    # opcional: agregar para mostrar la fecha relativa
+    
     relative_date: Optional[str] = None  
 
     class Config:
@@ -54,29 +50,90 @@ class Legend(LegendBase):
         orm_mode = True
 
 
-# ---------------------------
-# UBICACIÓN
-# ---------------------------
+
+    class Config:
+        from_attributes = True
+
 
 class ProvinceBase(BaseModel):
+    id: int
     name: str
 
+    class Config:
+        from_attributes = True
+
 class CantonBase(BaseModel):
+    id: int
     name: str
     province_id: int
 
+    class Config:
+        from_attributes = True
+
 class DistrictBase(BaseModel):
+    id: int
     name: str
     canton_id: int
 
+    class Config:
+        from_attributes = True
 
-# ---------------------------
-# CATEGORÍA
-# ---------------------------
+
+
 
 class CategoryBase(BaseModel):
+    id: int
     name: str
+
+    class Config:
+        from_attributes = True
     
 
-class LegendOut(Legend):
-    relative_date: Optional[str] = None
+
+
+class CategoryRead(CategoryBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+
+
+class ProvinceRead(ProvinceBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class CantonRead(CantonBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class DistrictRead(DistrictBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class LegendOut(BaseModel):
+    id: int
+    title: str
+    description: str
+    image_url: Optional[str]
+    legend_date: date
+    created_at: date
+    relative_date: str
+    owner_id: int
+    category: Optional[CategoryRead] = None
+    province: Optional[ProvinceRead] = None
+    canton: Optional[CantonRead] = None
+    district: Optional[DistrictRead] = None
+
+    class Config:
+        orm_mode = True

@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.db import create_db_and_tables
-from app.routes import auth, leyendas
+from app.routes import auth, leyendas, public
+from fastapi.staticfiles import StaticFiles
+
 
 app = FastAPI(
     title="4thewords API",
@@ -9,21 +11,23 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Habilitar CORS para permitir conexión con el frontend en el puerto 3000
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["http://localhost:5173"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Crear las tablas automáticamente al arrancar el servidor
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
 
-# Incluir rutas separadas por funcionalidad
+
+app.include_router(public.router)
 app.include_router(auth.router)
 app.include_router(leyendas.router)
 
