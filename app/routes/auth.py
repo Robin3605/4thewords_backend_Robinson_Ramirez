@@ -3,12 +3,14 @@ from sqlmodel import Session, select
 from app.db.db import get_session
 from app.schemas.schemas import UserCreate, UserLogin, Token
 from app.models.models import User
-from app.auth.auth import authenticate_user, create_access_token, get_password_hash, get_current_user
+from app.auth.auth import authenticate_user,  get_current_user
 from datetime import timedelta
 from fastapi.responses import JSONResponse
 from app.db.config import settings
 from typing import List
-from fastapi.security import OAuth2PasswordRequestForm
+# from fastapi.security import OAuth2PasswordRequestForm
+from app.auth.jwt_handler import create_access_token
+from app.utils.utils import  get_password_hash
 
 router = APIRouter(tags=["Autenticación"])
 

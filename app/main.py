@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db.db import create_db_and_tables
 from app.routes import auth, leyendas, public
 from fastapi.staticfiles import StaticFiles
+import os
 
 
 app = FastAPI(
@@ -20,7 +21,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+    "/static",
+    StaticFiles(directory=os.path.join("app", "static")),
+    name="static"
+)
 
 @app.on_event("startup")
 def on_startup():

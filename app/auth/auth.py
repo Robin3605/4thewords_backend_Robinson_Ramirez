@@ -1,28 +1,29 @@
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
-from sqlmodel import Session, select
-from app.models.models import User
+from sqlmodel import Session
+# from app.models.models import User
 from app.db.db import get_session
 from app.schemas.schemas import TokenData
-from .jwt_handler import decode_access_token, create_access_token
+# from .jwt_handler import decode_access_token, create_access_token
 from jose import JWTError, jwt
 from app.db.config import settings
+from app.repository.auth import get_users_email, user_with_tocken
+from app.utils.utils import verify_password
 
 # Enruta el login a /token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Manejo de contraseñas
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+# def verify_password(plain_password, hashed_password):
+#     return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+# def get_password_hash(password):
+#     return pwd_context.hash(password)
 
 def authenticate_user(email: str, password: str, session: Session):
-    user = session.exec(select(User).where(User.email == email)).first()
+    user = get_users_email(email, session)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -58,7 +59,7 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    user = session.exec(select(User).where(User.email == token_data.email)).first()
+    user = user_with_tocken(token_data, session)
     if user is None:
         raise credentials_exception
     return user

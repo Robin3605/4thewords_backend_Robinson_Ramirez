@@ -1,6 +1,11 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
 from typing import Optional
+from fastapi import Form, UploadFile, File
+# from app.db.db import get_session
+# from app.auth.auth import get_current_user
+# from sqlmodel import  Session
+# from app.models.models import  User
 
 
 
@@ -19,6 +24,27 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
+class CreatingLegend:
+    def __init__(
+        self,
+        title: str = Form(...),
+        description: str = Form(...),
+        legend_date: str = Form(...),
+        category_id: int = Form(...),
+        province_id: int = Form(...),
+        canton_id: int = Form(...),
+        district_id: int = Form(...),
+        file: UploadFile = File(...)
+    ):
+        self.title = title
+        self.description = description
+        self.legend_date = legend_date
+        self.category_id = category_id
+        self.province_id = province_id
+        self.canton_id = canton_id
+        self.district_id = district_id
+        self.file = file
+   
 
 
 
