@@ -1,10 +1,8 @@
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
-# from app.models.models import User
 from app.db.db import get_session
 from app.schemas.schemas import TokenData
-# from .jwt_handler import decode_access_token, create_access_token
 from jose import JWTError, jwt
 from app.db.config import settings
 from app.repository.auth import get_users_email, user_with_tocken
@@ -12,15 +10,6 @@ from app.utils.utils import verify_password
 
 # Enruta el login a /token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-# Manejo de contraseñas
-# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# def verify_password(plain_password, hashed_password):
-#     return pwd_context.verify(plain_password, hashed_password)
-
-# def get_password_hash(password):
-#     return pwd_context.hash(password)
 
 def authenticate_user(email: str, password: str, session: Session):
     user = get_users_email(email, session)

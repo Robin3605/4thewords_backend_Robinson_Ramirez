@@ -3,7 +3,6 @@ from sqlmodel import Session, select
 from app.db.db import get_session
 from app.models.models import Canton, District
 from app.schemas.schemas import ProvinceRead, CantonRead, DistrictRead, CategoryRead
-# from app.crud import leyendas as crud
 from typing import List
 from app.crud.legends import get_categories, get_provinces
 

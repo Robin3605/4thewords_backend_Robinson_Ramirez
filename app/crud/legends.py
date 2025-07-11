@@ -1,12 +1,8 @@
 from sqlmodel import  Session
 from datetime import date
-# from typing import Optional, List
 from app.models.models import  User
 from app.schemas.schemas import LegendCreate, LegendUpdate
-# from sqlalchemy.orm import selectinload
-from fastapi import  Depends, HTTPException, Request
-from app.db.db import get_session
-from app.auth.auth import get_current_user
+from fastapi import  HTTPException, Request
 from app.utils.images import save_uploaded_file
 from app.repository.legends import create, get_one, update_one, delete_one, get_all_legends, get_all_categories, get_all_provinces, get_all_cantons, get_all_districts
 from app.schemas.schemas import CreatingLegend
@@ -16,13 +12,6 @@ from app.utils.images import  relative_date
 
 
 
-
-# def create_legend(session: Session, legend: LegendCreate, image_url: str, user_id: int) -> Legend:
-#     db_legend = Legend(**legend.dict(), image_url=image_url, owner_id=user_id)
-#     session.add(db_legend)
-#     session.commit()
-#     session.refresh(db_legend)
-#     return db_legend
 def creating_legend(data: CreatingLegend , session: Session, user: User):
     image_url = save_uploaded_file(data.file)
     legend_data = LegendCreate(
@@ -37,8 +26,6 @@ def creating_legend(data: CreatingLegend , session: Session, user: User):
     return create(session, legend_data, image_url, user.id)
 
 
-# def get_legend(session: Session, legend_id: int) -> Optional[Legend]:
-#     return session.get(Legend, legend_id)
 
 def get_legend_by_id(id: int, session: Session , current_user: User ):
     legend = get_one(session, id)
@@ -60,17 +47,6 @@ def get_legend_by_id(id: int, session: Session , current_user: User ):
     }
 
 
-# def update_legend(session, legend_id: int, legend: LegendUpdate):
-#     db_legend = session.get(Legend, legend_id)
-#     if not db_legend:
-#         return None
-#     legend_data = legend.dict(exclude_unset=True)
-#     for key, value in legend_data.items():
-#         setattr(db_legend, key, value)
-#     session.add(db_legend)
-#     session.commit()
-#     session.refresh(db_legend)
-#     return db_legend
 
 def update_legend(
     legend_id: int,
@@ -87,13 +63,6 @@ def update_legend(
     return update_one(legend_id, updated_data, session)
 
 
-# def delete_legend(session: Session, legend_id: int) -> bool:
-#     db_legend = session.get(Legend, legend_id)
-#     if db_legend:
-#         session.delete(db_legend)
-#         session.commit()
-#         return True
-#     return False
 
 def delete_legend(
     legend_id: int,
@@ -116,40 +85,7 @@ def delete_legend(
     return {"message": "Leyenda eliminada"}
 
 
-# def get_legendas(
-#     session: Session,
-#     skip: int = 0,
-#     limit: int = 100,
-#     filters: dict = {}
-# ) -> List[Legend]:
-#     query = select(Legend).options(
-#         selectinload(Legend.category),
-#         selectinload(Legend.province),
-#         selectinload(Legend.canton),
-#         selectinload(Legend.district),
-#     )
 
-#     if "title" in filters:
-#         query = query.where(Legend.title.contains(filters["title"]))
-    
-#     if "category_id" in filters:
-#         query = query.where(Legend.category_id == filters["category_id"])
-    
-#     if "province_id" in filters:
-#         query = query.where(Legend.province_id == filters["province_id"])
-    
-#     if "canton_id" in filters:
-#         query = query.where(Legend.canton_id == filters["canton_id"])
-    
-#     if "district_id" in filters:
-#         query = query.where(Legend.district_id == filters["district_id"])
-    
-#     if "start_date" in filters and "end_date" in filters:
-#         query = query.where(
-#             Legend.legend_date.between(filters["start_date"], filters["end_date"])
-#         )
-
-#     return session.exec(query.offset(skip).limit(limit)).all()
 
 def get_legends(query: QueryParams, session: Session, request: Request, skip: int = 0, limit: int = 100):
     filters = {

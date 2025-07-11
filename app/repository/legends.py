@@ -1,5 +1,4 @@
 from sqlmodel import select, Session
-# from datetime import date
 from typing import Optional, List
 from app.models.models import Legend, Category, Province, Canton, District
 from app.schemas.schemas import LegendCreate, LegendUpdate
