@@ -32,7 +32,7 @@ app.mount(
 def on_startup():
     create_db_and_tables()
 
-
+# Rutas
 app.include_router(public.router)
 app.include_router(auth.router)
 app.include_router(leyendas.router)
